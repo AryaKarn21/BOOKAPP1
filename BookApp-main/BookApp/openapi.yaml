@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: BookApp API
+  version: 1.0.0
+  description: API to manage books in the BookApp
+servers:
+  - url: http://localhost:3000
+paths:
+  /books:
+    get:
+      summary: Retrieve all books
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      summary: Add a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201':
+          description: The created book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /books/{id}:
+    get:
+      summary: Retrieve a specific book
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Book:
+      type: object
+      required:
+        - id
+        - title
+        - author
+        - genre
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "The Great Gatsby"
+        author:
+          type: string
+          example: "F. Scott Fitzgerald"
+        genre:
+          type: string
+          example: "Fiction"
+    BookInput:
+      type: object
+      required:
+        - title
+        - author
+        - genre
+      properties:
+        title:
+          type: string
+          example: "1984"
+        author:
+          type: string
+          example: "George Orwell"
+        genre:
+          type: string
+          example: "Dystopian"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Book not found"
